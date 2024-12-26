@@ -19,7 +19,6 @@ import "./styles/App.css";
 function AppContent() {
   // states pour gérer la recherche et la pagination
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [index, setIndex] = useState<number>(0);
 
   // states pour contrôler l'affichage progressif
   const [visibleTracks, setVisibleTracks] = useState<Track[]>([]);
@@ -67,36 +66,6 @@ function AppContent() {
       });
     }
   }, [loading, data, visibleTracks, currentIndex, fetchMore, searchQuery]);
-
-  // const handleScroll = useCallback(() => {
-  //   const isBottom =
-  //     window.innerHeight + document.documentElement.scrollTop >=
-  //     document.documentElement.scrollHeight - 100;
-
-  //   if (isBottom && !loading && data?.searchTracks.total > allTracks.length) {
-  //     fetchMore({
-  //       variables: {
-  //         query: searchQuery,
-  //         limit: 50,
-  //         index: allTracks.length,
-  //       },
-  //       updateQuery: (prev, { fetchMoreResult }) => {
-  //         if (!fetchMoreResult) {
-  //           return prev;
-  //         }
-  //         return {
-  //           searchTracks: {
-  //             ...fetchMoreResult.searchTracks,
-  //             data: [
-  //               ...prev.searchTracks.data,
-  //               ...fetchMoreResult.searchTracks.data,
-  //             ],
-  //           },
-  //         };
-  //       },
-  //     });
-  //   }
-  // }, [fetchMore, loading, data, allTracks.length, searchQuery]);
 
   // configuration de l'écouteur de scroll
   useEffect(() => {
