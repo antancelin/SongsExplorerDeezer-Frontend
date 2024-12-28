@@ -1,5 +1,6 @@
 // packages import
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // interface import
 import { Track } from "../types";
@@ -17,6 +18,9 @@ type SortKey = "title" | "artist" | "album";
 type SortOrder = "asc" | "desc";
 
 const ResultsTable = ({ tracks }: ResultsTableProps) => {
+  // import du navigate
+  const navigate = useNavigate();
+
   // states pour le tri
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
@@ -70,6 +74,11 @@ const ResultsTable = ({ tracks }: ResultsTableProps) => {
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
+  // fonction de navigtion au 'clic' sur une chanson
+  const handleTrackClick = (trackId: number) => {
+    navigate(`/track/${trackId}`);
+  };
+
   return (
     <div className="results-table">
       <table>
@@ -90,7 +99,11 @@ const ResultsTable = ({ tracks }: ResultsTableProps) => {
         </thead>
         <tbody>
           {sortedTracks.map((track) => (
-            <tr key={track.id}>
+            <tr
+              key={track.id}
+              onClick={() => handleTrackClick(track.id)}
+              className="clickable-row"
+            >
               <td>{track.title}</td>
               <td>{track.artist.name}</td>
               <td>{track.album.title}</td>

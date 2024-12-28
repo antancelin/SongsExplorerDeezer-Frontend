@@ -1,5 +1,8 @@
 // packages import
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { debounce } from "../utils/debounce";
+
+// style import
 import "../styles/components/SearchBar.css";
 
 // Props : ce que le composant va recevoir de son parent
@@ -11,19 +14,30 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   // État local pour stocker la valeur de l'input
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  // Fonction appelée quand le formulaire est soumis
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Empêche le rechargement de la page
-    onSearch(searchTerm); // Appelle la fonction reçue en props avec le terme de recherche
-  };
+  // Création d'un version debounced de onSearch
+  // useCallback mémorise la fonction pour éviter des recréations inutiles
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      onSearch(value);
+    }, 800), // délai en ms
+    [onSearch]
+  );
+
+  // effet qui se déclnche quand SearchTerm change
+  useEffect(() => {
+    debouncedSearch(searchTerm);
+  }, [searchTerm, debouncedSearch]);
 
   // Fonction appelée à chaque changement dans l'input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+    const newValue = e.target.value;
+    setSearchTerm(newValue);
+    // même si valeur est vide, on transmet
+    debouncedSearch(newValue);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="search-bar">
+    <div className="search-bar">
       <input
         type="text"
         value={searchTerm}
@@ -31,10 +45,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
         placeholder="Rechercher une chanson..."
         className="search-input"
       />
-      <button type="submit" className="search-button">
-        Rechercher
-      </button>
-    </form>
+    </div>
   );
 };
 
