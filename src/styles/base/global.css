@@ -1,9 +1,9 @@
 /* Styles globaux de l'application */
 :root {
   /* Variables de couleurs */
-  --primary-color: #ef5466; /* Rouge Deezer */
+  --primary-color: #a237ff; /* Rouge Deezer */
   --secondary-color: #23232c; /* Gris foncé Deezer */
-  --background-color: #ffffff;
+  --background-color: #fdfcfe;
   --text-color: #23232c;
 }
 

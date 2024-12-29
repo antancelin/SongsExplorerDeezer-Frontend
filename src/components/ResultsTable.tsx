@@ -67,13 +67,6 @@ const ResultsTable = ({ tracks }: ResultsTableProps) => {
     }
   };
 
-  // fonction utilitaire pour formater la durée (sec) en minutes:secondes
-  const formatDuration = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-  };
-
   // fonction de navigtion au 'clic' sur une chanson
   const handleTrackClick = (trackId: number) => {
     navigate(`/track/${trackId}`);
@@ -94,7 +87,7 @@ const ResultsTable = ({ tracks }: ResultsTableProps) => {
             <th onClick={() => handleSort("album")}>
               Album {sortKey === "album" && (sortOrder === "asc" ? "↑" : "↓")}
             </th>
-            <th>Durée</th>
+            {/* <th>Durée</th> */}
           </tr>
         </thead>
         <tbody>
@@ -107,7 +100,6 @@ const ResultsTable = ({ tracks }: ResultsTableProps) => {
               <td>{track.title}</td>
               <td>{track.artist.name}</td>
               <td>{track.album.title}</td>
-              <td>{formatDuration(track.duration)}</td>
             </tr>
           ))}
         </tbody>

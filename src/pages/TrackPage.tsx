@@ -3,6 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { GET_TRACK_DETAILS } from "../graphql/queries";
 
+// component import
+import Spinner from "../components/Spinner";
+
 // interface pour les props optionnelles
 interface TrackDetailsProps {
   className?: string;
@@ -23,7 +26,7 @@ const TrackPage = ({ className = "" }: TrackDetailsProps) => {
 
   // gestion du chargement
   if (loading) {
-    return <div>Chargement...</div>;
+    return <Spinner />;
   }
   if (error) {
     return <div>Erreur : {error.message}</div>;
@@ -37,6 +40,13 @@ const TrackPage = ({ className = "" }: TrackDetailsProps) => {
     navigate(-1); // utilise l'historique de navigation
   };
 
+  // fonction utilitaire pour formater la durée (sec) en minutes:secondes
+  const formatDuration = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
+
   const track = data.getTrackDetails;
 
   return (
@@ -46,6 +56,7 @@ const TrackPage = ({ className = "" }: TrackDetailsProps) => {
       </button>
       <div className="track-header">
         <h1>{track.title}</h1>
+        <p>{formatDuration(track.duration)}</p>
         <div className="album-info">
           <h3>{track.album.title}</h3>
           <img src={track.album.cover} alt={track.album.title} />

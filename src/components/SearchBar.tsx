@@ -2,6 +2,9 @@
 import { useState, useCallback, useEffect } from "react";
 import { debounce } from "../utils/debounce";
 
+// icons import
+import { BiSearch, BiX } from "react-icons/bi";
+
 // style import
 import "../styles/components/SearchBar.css";
 
@@ -36,15 +39,25 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
     debouncedSearch(newValue);
   };
 
+  // fonction pour vider la barre de recherche
+  const handleClear = () => {
+    setSearchTerm("");
+    onSearch("");
+  };
+
   return (
     <div className="search-bar">
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={handleChange}
-        placeholder="Rechercher une chanson..."
-        className="search-input"
-      />
+      <div className="search-input-container">
+        <BiSearch className="search-icon" />
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleChange}
+          placeholder="Rechercher une chanson..."
+          className="search-input"
+        />
+        {searchTerm && <BiX className="clear-icon" onClick={handleClear} />}
+      </div>
     </div>
   );
 };

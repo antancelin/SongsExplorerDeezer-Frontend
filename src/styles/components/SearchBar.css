@@ -1,27 +1,56 @@
+/* styles/components/SearchBar.css */
 .search-bar {
-  display: flex;
-  gap: 10px;
+  width: 100%;
   max-width: 600px;
-  margin: 20px auto;
-  padding: 0 20px;
+  margin: 0 auto;
+}
+
+.search-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 20px;
+  color: #666;
 }
 
 .search-input {
-  flex: 1;
-  padding: 12px;
+  width: 100%;
+  padding: 12px 12px 12px 40px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
+  background-color: #f4f2f7;
+  /* Enlever l'outline par défaut */
+  outline: none;
+  /* Définir une transition pour un effet plus doux */
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.search-button {
-  padding: 12px 24px;
-  background-color: var(--primary-color);
-  color: white;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+.search-input:hover {
+  background-color: #eae7ed;
 }
 
-.search-button:hover {
-  background-color: #d64456; /* Version plus foncée du rouge Deezer */
+/* Style quand l'input est focus */
+.search-input:focus {
+  border-color: var(--primary-color); /* Couleur Deezer */
+  /* Ajouter une ombre subtile de la même couleur */
+  box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.clear-icon {
+  position: absolute;
+  right: 12px;
+  font-size: 30px;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.clear-icon:hover {
+  color: #a237ff; /* Couleur Deezer au hover */
 }

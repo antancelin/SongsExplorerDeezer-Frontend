@@ -8,6 +8,7 @@ import { SEARCH_TRACKS } from "../graphql/queries";
 // components import
 import SearchBar from "../components/SearchBar";
 import ResultsTable from "../components/ResultsTable";
+import Spinner from "../components/Spinner";
 
 // types import
 import { Track } from "../types";
@@ -98,9 +99,8 @@ const SearchPage = () => {
     <div className="app">
       <h1>Songs Explorer w/ Deezer</h1>
       <SearchBar onSearch={handleSearch} />
-      {loading && <div>Chargement...</div>}
+      {loading && <Spinner />}
       {error && <div>Erreur : {error.message}</div>}
-      {/* n'affiche le tableau que si on a une recherche et des résultats */}
       {searchQuery && data?.searchTracks && (
         <ResultsTable tracks={visibleTracks} />
       )}
