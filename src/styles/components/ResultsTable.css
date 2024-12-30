@@ -1,4 +1,4 @@
-/* src/styles/components/ResultsTable.css */
+/* Styles de base */
 .results-table {
   width: 100%;
   margin: 20px auto;
@@ -154,4 +154,66 @@ tr:hover {
 .reset-sort-button:hover {
   background-color: var(--primary-color);
   color: white;
+}
+
+/* Styles pour tablettes */
+@media (max-width: 768px) {
+  .results-table {
+    width: calc(100% - 10px);
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .track-name img {
+    width: 40px;
+    margin-right: 10px;
+  }
+
+  .reset-sort-button {
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+}
+
+/* Styles pour mobiles */
+@media (max-width: 480px) {
+  th,
+  td {
+    font-size: 12px;
+    padding: 6px;
+    max-width: 120px; /* Limite la largeur maximale des cellules */
+    white-space: nowrap; /* Empêche le texte d'aller à la ligne */
+    overflow: hidden; /* Cache le texte qui dépasse */
+    text-overflow: ellipsis; /* Ajoute les points de suspension */
+  }
+
+  /* Style spécifique pour la colonne du titre qui peut être plus large */
+  .track-name {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  td:nth-child(2), /* Colonne artiste */
+  td:nth-child(3) /* Colonne album */ {
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .track-name img {
+    width: 30px;
+    margin-right: 8px;
+    flex-shrink: 0; /* Empêche l'image de se rétrécir */
+  }
 }

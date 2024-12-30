@@ -1,4 +1,4 @@
-/* styles/components/SearchBar.css */
+/* Styles de base */
 .search-bar {
   width: 100%;
   max-width: 600px;
@@ -53,4 +53,22 @@
 
 .clear-icon:hover {
   color: var(--primary-color); /* Couleur Deezer au hover */
+}
+
+/* Styles pour tablettes et mobiles */
+@media (max-width: 768px) {
+  .search-bar {
+    width: calc(100% - 20px);
+    margin: 0 auto;
+  }
+
+  .search-input {
+    padding: 10px 35px;
+    font-size: 14px;
+  }
+
+  .search-icon,
+  .clear-icon {
+    font-size: 16px;
+  }
 }
