@@ -1,15 +1,14 @@
 /* Styles globaux de l'application */
 :root {
   /* Variables de couleurs */
-  --primary-color: #a237ff; /* Rouge Deezer */
-  --secondary-color: #23232c; /* Gris foncé Deezer */
+  --primary-color: #a237ff;
+  --secondary-color: #23232c;
   --background-color: #fdfcfe;
   --text-color: #23232c;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, sans-serif;
+  font-family: Inter, sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.5;

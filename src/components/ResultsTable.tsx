@@ -8,6 +8,10 @@ import { Track } from "../types";
 // style import
 import "../styles/components/ResultsTable.css";
 
+// icons import
+import { MdExplicit } from "react-icons/md";
+import { CiTimer } from "react-icons/ci";
+
 // component props
 interface ResultsTableProps {
   tracks: Track[]; // liste des chansons à afficher
@@ -72,22 +76,89 @@ const ResultsTable = ({ tracks }: ResultsTableProps) => {
     navigate(`/track/${trackId}`);
   };
 
+  // fonction utilitaire pour formater la durée (sec) en minutes:secondes
+  const formatDuration = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
+
+  // Fonction de réinitialisation
+  const resetSort = () => {
+    setSortKey(null);
+    setSortOrder("asc");
+  };
+
   return (
     <div className="results-table">
       <table>
         <thead>
           <tr>
-            <th onClick={() => handleSort("title")}>
-              Titre {sortKey === "title" && (sortOrder === "asc" ? "↑" : "↓")}
+            <th onClick={() => handleSort("title")} className="sortable-header">
+              <div className="header-container">
+                <span className="header-content">
+                  Title
+                  <span className="sort-arrow">
+                    {sortKey === "title"
+                      ? sortOrder === "asc"
+                        ? "↑"
+                        : "↓"
+                      : "↕"}
+                  </span>
+                </span>
+                {sortKey === "title" && (
+                  <button onClick={resetSort} className="reset-sort-button">
+                    Reset
+                  </button>
+                )}
+              </div>
             </th>
-            <th onClick={() => handleSort("artist")}>
-              Artiste{" "}
-              {sortKey === "artist" && (sortOrder === "asc" ? "↑" : "↓")}
+            <th
+              onClick={() => handleSort("artist")}
+              className="sortable-header"
+            >
+              <div className="header-container">
+                <span className="header-content">
+                  Artist
+                  <span className="sort-arrow">
+                    {sortKey === "artist"
+                      ? sortOrder === "asc"
+                        ? "↑"
+                        : "↓"
+                      : "↕"}
+                  </span>
+                </span>
+                {sortKey === "artist" && (
+                  <button onClick={resetSort} className="reset-sort-button">
+                    Reset
+                  </button>
+                )}
+              </div>
             </th>
-            <th onClick={() => handleSort("album")}>
-              Album {sortKey === "album" && (sortOrder === "asc" ? "↑" : "↓")}
+            <th onClick={() => handleSort("album")} className="sortable-header">
+              <div className="header-container">
+                <span className="header-content">
+                  Album
+                  <span className="sort-arrow">
+                    {sortKey === "album"
+                      ? sortOrder === "asc"
+                        ? "↑"
+                        : "↓"
+                      : "↕"}
+                  </span>
+                </span>
+                {sortKey === "album" && (
+                  <button onClick={resetSort} className="reset-sort-button">
+                    Reset
+                  </button>
+                )}
+              </div>
             </th>
-            {/* <th>Durée</th> */}
+            <th className="duration-icon">
+              <div className="timer-reset-container">
+                <CiTimer />
+              </div>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -97,9 +168,13 @@ const ResultsTable = ({ tracks }: ResultsTableProps) => {
               onClick={() => handleTrackClick(track.id)}
               className="clickable-row"
             >
-              <td>{track.title}</td>
+              <td className="track-name">
+                <img src={track.album.coverSmall} />
+                {track.title} {track.explicit && <MdExplicit />}
+              </td>
               <td>{track.artist.name}</td>
               <td>{track.album.title}</td>
+              <td>{formatDuration(track.duration)}</td>
             </tr>
           ))}
         </tbody>

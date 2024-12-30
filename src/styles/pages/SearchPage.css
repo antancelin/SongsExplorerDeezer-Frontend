@@ -1,0 +1,28 @@
+.title {
+  text-align: center;
+  margin: 40px;
+  font-size: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.title img {
+  width: 50px;
+  animation: slowSpin 10s linear infinite;
+}
+
+@keyframes slowSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.title h1 {
+  font-weight: bolder;
+  font-style: italic;
+}

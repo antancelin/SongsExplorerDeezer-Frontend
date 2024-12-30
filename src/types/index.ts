@@ -5,6 +5,7 @@ export interface Track {
   id: number; // L'identifiant unique de la chanson
   title: string; // Le titre de la chanson
   duration: number; // La durée en secondes
+  explicit: boolean; // paroles explicit ou non
   artist: Artist; // Les informations de l'artiste (voir l'interface Artist ci-dessous)
   album: Album; // Les informations de l'album (voir l'interface Album ci-dessous)
 }
@@ -23,7 +24,8 @@ export interface Artist {
 export interface Album {
   id: number; // L'identifiant unique de l'album
   title: string; // Le titre de l'album
-  cover: string; // L'URL de la pochette de l'album
+  coverSmall: string; // L'URL de la pochette de l'album (petite)
+  coverBig: string; // L'URL de la pochette de l'album (moyenne)
 }
 
 // Interface pour la réponse de l'API lors d'une recherche

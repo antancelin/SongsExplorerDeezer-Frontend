@@ -6,6 +6,12 @@ import { GET_TRACK_DETAILS } from "../graphql/queries";
 // component import
 import Spinner from "../components/Spinner";
 
+// style import
+import "../styles/pages/TrackPage.css";
+
+// icons import
+import { MdExplicit } from "react-icons/md";
+
 // interface pour les props optionnelles
 interface TrackDetailsProps {
   className?: string;
@@ -51,29 +57,35 @@ const TrackPage = ({ className = "" }: TrackDetailsProps) => {
 
   return (
     <div className={`track-details ${className}`}>
-      <button onClick={() => handleBack()} className="back-button">
+      <button onClick={handleBack} className="back-button">
         ← Retour
       </button>
+
+      {/* Colonne gauche - Infos de la chanson */}
       <div className="track-header">
-        <h1>{track.title}</h1>
+        <div className="track-title">
+          <h1>{track.title}</h1>
+          {track.explicit && <MdExplicit className="explicit-icon" />}
+        </div>
         <p>{formatDuration(track.duration)}</p>
         <div className="album-info">
           <h3>{track.album.title}</h3>
-          <img src={track.album.cover} alt={track.album.title} />
+          <img src={track.album.coverBig} alt={track.album.title} />
         </div>
       </div>
 
+      {/* Colonne droite - Infos de l'artiste */}
       <div className="artist-info">
         <img src={track.artist.picture} alt={track.artist.name} />
         <h2>{track.artist.name}</h2>
-      </div>
 
-      {track.artist.biography && (
-        <div className="artist-biography">
-          <h3>Biographie de l'artiste</h3>
-          <p>{track.artist.biography}</p>
-        </div>
-      )}
+        {track.artist.biography && (
+          <div className="artist-biography">
+            <h3>Biography</h3>
+            <p>{track.artist.biography}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

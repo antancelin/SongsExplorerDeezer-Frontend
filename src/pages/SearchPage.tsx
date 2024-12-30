@@ -16,6 +16,9 @@ import { Track } from "../types";
 // style import
 import "../styles/pages/SearchPage.css";
 
+// images import
+import logo from "../assets/img/deezer-logo.png";
+
 const SearchPage = () => {
   // states pour gérer la recherche et la pagination
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -97,7 +100,10 @@ const SearchPage = () => {
 
   return (
     <div className="app">
-      <h1>Songs Explorer w/ Deezer</h1>
+      <div className="title">
+        <img src={logo} alt="deezer-logo" />
+        <h1>DEEZER EXPLORER</h1>
+      </div>
       <SearchBar onSearch={handleSearch} />
       {loading && <Spinner />}
       {error && <div>Erreur : {error.message}</div>}

@@ -9,6 +9,7 @@ export const SEARCH_TRACKS = gql`
         id
         title
         duration
+        explicit
         artist {
           id
           name
@@ -17,7 +18,8 @@ export const SEARCH_TRACKS = gql`
         album {
           id
           title
-          cover
+          coverSmall
+          coverBig
         }
       }
       total
@@ -34,6 +36,7 @@ export const GET_TRACK_DETAILS = gql`
       id
       title
       duration
+      explicit
       artist {
         id
         name
@@ -43,7 +46,8 @@ export const GET_TRACK_DETAILS = gql`
       album {
         id
         title
-        cover
+        coverSmall
+        coverBig
       }
     }
   }

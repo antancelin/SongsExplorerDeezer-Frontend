@@ -21,7 +21,7 @@
 .search-input {
   width: 100%;
   padding: 12px 12px 12px 40px;
-  border: 1px solid #ddd;
+  border: none;
   border-radius: 4px;
   font-size: 16px;
   background-color: #f4f2f7;
@@ -52,5 +52,5 @@
 }
 
 .clear-icon:hover {
-  color: #a237ff; /* Couleur Deezer au hover */
+  color: var(--primary-color); /* Couleur Deezer au hover */
 }
