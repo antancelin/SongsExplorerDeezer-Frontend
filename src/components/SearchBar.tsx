@@ -11,11 +11,17 @@ import "../styles/components/SearchBar.css";
 // Props : ce que le composant va recevoir de son parent
 interface SearchBarProps {
   onSearch: (query: string) => void; // Fonction appelée quand l'utilisateur recherche
+  initialValue?: string; // Nouvelle prop pour la valeur initiale, optionnelle grâce au '?'
 }
 
-const SearchBar = ({ onSearch }: SearchBarProps) => {
+const SearchBar = ({ onSearch, initialValue = "" }: SearchBarProps) => {
   // État local pour stocker la valeur de l'input
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>(initialValue);
+
+  // Effet pour synchroniser searchTerm avec initialValue
+  useEffect(() => {
+    setSearchTerm(initialValue);
+  }, [initialValue]);
 
   // Création d'un version debounced de onSearch
   // useCallback mémorise la fonction pour éviter des recréations inutiles

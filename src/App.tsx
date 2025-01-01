@@ -1,9 +1,10 @@
 // packages import
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// graphql import
-import { ApolloProvider } from "@apollo/client";
-import { client } from "./graphql/client";
+// React Query import
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { queryClient } from "./queryClient";
 
 // pages import
 import SearchPage from "./pages/SearchPage";
@@ -14,14 +15,15 @@ import "./styles/App.css";
 
 const App = () => {
   return (
-    <ApolloProvider client={client}>
+    <QueryClientProvider client={queryClient}>
       <Router>
         <Routes>
           <Route path="/" element={<SearchPage />} />
           <Route path="/track/:id" element={<TrackPage />} />
         </Routes>
       </Router>
-    </ApolloProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 };
 

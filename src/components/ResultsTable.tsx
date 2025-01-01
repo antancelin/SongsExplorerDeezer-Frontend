@@ -17,9 +17,8 @@ interface ResultsTableProps {
   tracks: Track[]; // liste des chansons à afficher
 }
 
-// type pour le state de tri
-type SortKey = "title" | "artist" | "album";
-type SortOrder = "asc" | "desc";
+// type import
+import { SortKey, SortOrder } from "../types";
 
 const ResultsTable = ({ tracks }: ResultsTableProps) => {
   // import du navigate

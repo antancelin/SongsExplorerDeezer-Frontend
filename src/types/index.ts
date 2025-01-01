@@ -36,3 +36,7 @@ export interface SearchResponse {
   prev?: string; // URL optionnelle (?) pour la page précédente
   next?: string; // URL optionnelle (?) pour la page suivante
 }
+
+// type pour le state de tri
+export type SortKey = "title" | "artist" | "album";
+export type SortOrder = "asc" | "desc";

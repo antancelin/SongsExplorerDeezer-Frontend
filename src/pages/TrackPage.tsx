@@ -1,7 +1,7 @@
 // packages import
 import { useParams, useNavigate } from "react-router-dom";
-import { useQuery } from "@apollo/client";
-import { GET_TRACK_DETAILS } from "../graphql/queries";
+import { useQuery } from "@tanstack/react-query";
+import { getTrackDetails } from "../services/api";
 
 // component import
 import Spinner from "../components/Spinner";
@@ -18,42 +18,50 @@ interface TrackDetailsProps {
 }
 
 const TrackPage = ({ className = "" }: TrackDetailsProps) => {
-  // import du navigate
+  // Navigation et récupération de l'ID
   const navigate = useNavigate();
-
-  // récupération de l'ID depuis l'URL
   const { id } = useParams<{ id: string }>();
 
-  // requête GraphQL pour obtenir les détails d'une chanson
-  const { loading, error, data } = useQuery(GET_TRACK_DETAILS, {
-    variables: { trackId: id },
-    skip: !id,
+  const {
+    data: track,
+    isLoading,
+    error,
+  } = useQuery({
+    // Clé unique pour cette requête
+    queryKey: ["track", id],
+
+    // Fonction qui récupère les données
+    queryFn: () => getTrackDetails(id!),
+
+    // Ne pas exécuter la requête si pas d'ID
+    enabled: !!id,
+
+    // Garder les données en cache pendant 5 minutes
+    staleTime: 1000 * 60 * 5,
   });
 
-  // gestion du chargement
-  if (loading) {
+  // Gestion du chargement et des erreurs
+  if (isLoading) {
     return <Spinner />;
   }
+
   if (error) {
-    return <div>Erreur : {error.message}</div>;
+    return <div>Erreur : {(error as Error).message}</div>;
   }
-  if (!data?.getTrackDetails) {
+
+  if (!track) {
     return <div>Chanson non trouvée</div>;
   }
 
-  // fonction pour retourner à la page précédente
   const handleBack = () => {
-    navigate(-1); // utilise l'historique de navigation
+    navigate(-1);
   };
 
-  // fonction utilitaire pour formater la durée (sec) en minutes:secondes
   const formatDuration = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
-
-  const track = data.getTrackDetails;
 
   return (
     <div className={`track-details ${className}`}>
