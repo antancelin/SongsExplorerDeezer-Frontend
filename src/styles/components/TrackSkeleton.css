@@ -1,0 +1,152 @@
+/* styles/components/TrackSkeleton.css */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-gradient,
+.skeleton-button,
+.skeleton-title,
+.skeleton-duration,
+.skeleton-album-title,
+.skeleton-album-cover,
+.skeleton-artist-img,
+.skeleton-artist-name,
+.skeleton-biography-title,
+.skeleton-text-line {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Structure de base identique à TrackPage */
+.track-details.skeleton {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 20px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  position: relative;
+}
+
+/* Bouton retour */
+.skeleton-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 80px;
+  height: 36px;
+  border-radius: 4px;
+  /* @extend .skeleton-gradient; */
+}
+
+/* Colonne gauche */
+.track-header {
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.skeleton-title {
+  height: 40px;
+  width: 70%;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  /* @extend .skeleton-gradient; */
+}
+
+.skeleton-duration {
+  height: 20px;
+  width: 60px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  /* @extend .skeleton-gradient; */
+}
+
+.skeleton-album-title {
+  height: 24px;
+  width: 50%;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  /* @extend .skeleton-gradient; */
+}
+
+.skeleton-album-cover {
+  width: 100%;
+  height: 300px;
+  border-radius: 8px;
+  /* @extend .skeleton-gradient; */
+}
+
+/* Colonne droite */
+.artist-info {
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.skeleton-artist-img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  /* @extend .skeleton-gradient; */
+}
+
+.skeleton-artist-name {
+  height: 32px;
+  width: 60%;
+  margin: 0 auto 20px;
+  border-radius: 4px;
+  /* @extend .skeleton-gradient; */
+}
+
+.skeleton-biography-title {
+  height: 24px;
+  width: 40%;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  /* @extend .skeleton-gradient; */
+}
+
+.skeleton-text-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-text-line {
+  height: 16px;
+  width: 100%;
+  border-radius: 4px;
+  /* @extend .skeleton-gradient; */
+}
+
+/* Media Query */
+@media (max-width: 768px) {
+  .track-details.skeleton {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding-top: 60px;
+  }
+
+  .skeleton-button {
+    top: 10px;
+  }
+
+  .skeleton-album-cover {
+    height: 200px;
+  }
+
+  .skeleton-artist-img {
+    width: 150px;
+    height: 150px;
+  }
+}

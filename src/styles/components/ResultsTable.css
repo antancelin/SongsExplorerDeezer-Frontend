@@ -1,4 +1,4 @@
-/* Styles de base */
+/* Structure de base du tableau */
 .results-table {
   width: 100%;
   margin: 20px auto;
@@ -12,6 +12,7 @@ table {
   border-collapse: collapse;
 }
 
+/* En-têtes du tableau */
 th {
   padding: 12px;
   text-align: left;
@@ -21,71 +22,87 @@ th {
 
 th:last-of-type {
   padding: 14px;
-  background-color: #f5f5f5;
   display: flex;
   justify-content: center;
   font-size: 20px;
   cursor: default;
 }
 
-th:last-of-type:hover {
-  background-color: #f5f5f5;
-}
-
+/* Styles des lignes */
 tbody tr {
-  margin-bottom: 5px; /* Ajoute la marge entre les lignes */
-  border: 5px solid white; /* Crée un espace visuel entre les lignes */
+  margin-bottom: 5px;
+  border: 5px solid white;
 }
 
 tbody tr:hover {
   background-color: #f9f9f9;
 }
 
+/* Styles des cellules */
 td {
-  padding: 12px;
+  padding: 12px 20px;
   text-align: left;
   cursor: pointer;
 }
 
-td:last-of-type {
+td:nth-child(1) {
+  /* Title column */
+  max-width: 300px;
+  padding-right: 30px;
+}
+
+td:nth-child(2) {
+  /* Artist column */
+  max-width: 200px;
+  padding-right: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+td:nth-child(3) {
+  /* Album column */
+  max-width: 200px;
+  padding-right: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+td:last-child {
+  /* Duration column */
+  max-width: 80px;
   text-align: center;
 }
 
-.clickable-row {
-  padding: 10px 0;
-}
-
+/* Styles de la colonne titre avec image */
 .track-name {
   display: flex;
   align-items: center;
-  gap: 5px;
+  width: 100%;
 }
 
 .track-name img {
-  margin-right: 20px;
+  flex-shrink: 0;
+  margin-right: 12px;
+  width: 50px;
+  height: 50px;
 }
 
-th {
-  background-color: #f5f5f5;
+.track-title {
+  flex: 1;
+  min-width: 0;
 }
 
-th:hover {
-  background-color: #e5e5e5;
+.title-text {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-tr:hover {
-  background-color: #f9f9f9;
-}
-
-.clickable-row {
-  transition: background-color 0.2s;
-}
-
-.clickable-row:hover {
-  background-color: #f5f5f5;
-}
-
-/* Styles pour les en-têtes de colonnes triables */
+/* Styles d'en-tête triable */
 .sortable-header {
   position: relative;
   padding: 12px;
@@ -107,7 +124,7 @@ tr:hover {
   position: relative;
 }
 
-/* Effet de soulignement au hover */
+/* Effet de soulignement et flèches de tri */
 .header-content::after {
   content: "";
   position: absolute;
@@ -123,7 +140,6 @@ tr:hover {
   width: 100%;
 }
 
-/* Gestion des flèches de tri */
 .sort-arrow {
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
@@ -135,11 +151,7 @@ tr:hover {
   opacity: 1;
 }
 
-/* Quand le tri est actif */
-.sortable-header[data-active="true"] .sort-arrow {
-  opacity: 1;
-}
-
+/* Bouton reset */
 .reset-sort-button {
   padding: 4px 8px;
   border: 1px solid var(--primary-color);
@@ -156,7 +168,7 @@ tr:hover {
   color: white;
 }
 
-/* Styles pour tablettes */
+/* Styles responsifs */
 @media (max-width: 768px) {
   .results-table {
     width: calc(100% - 10px);
@@ -168,12 +180,32 @@ tr:hover {
 
   th,
   td {
-    padding: 8px;
+    padding: 12px 15px;
     font-size: 14px;
+  }
+
+  td:nth-child(1) {
+    max-width: 250px;
+    padding-right: 20px;
+  }
+
+  td:nth-child(2) {
+    max-width: 150px;
+    padding-right: 15px;
+  }
+
+  td:nth-child(3) {
+    max-width: 150px;
+    padding-right: 15px;
+  }
+
+  td:last-child {
+    max-width: 60px;
   }
 
   .track-name img {
     width: 40px;
+    height: 40px;
     margin-right: 10px;
   }
 
@@ -183,37 +215,52 @@ tr:hover {
   }
 }
 
-/* Styles pour mobiles */
 @media (max-width: 480px) {
   th,
   td {
     font-size: 12px;
-    padding: 6px;
-    max-width: 120px; /* Limite la largeur maximale des cellules */
-    white-space: nowrap; /* Empêche le texte d'aller à la ligne */
-    overflow: hidden; /* Cache le texte qui dépasse */
-    text-overflow: ellipsis; /* Ajoute les points de suspension */
+    padding: 8px 12px;
   }
 
-  /* Style spécifique pour la colonne du titre qui peut être plus large */
-  .track-name {
+  td:first-child {
     max-width: 150px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
-  td:nth-child(2), /* Colonne artiste */
-  td:nth-child(3) /* Colonne album */ {
+  td:nth-child(2),
+  td:nth-child(3) {
     max-width: 100px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    padding: 8px 15px;
+  }
+
+  td:last-child {
+    max-width: 50px;
+    text-align: center;
   }
 
   .track-name img {
     width: 30px;
+    height: 30px;
     margin-right: 8px;
-    flex-shrink: 0; /* Empêche l'image de se rétrécir */
+  }
+}
+
+@media (max-width: 375px) {
+  th,
+  td {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  td:first-child {
+    max-width: 110px;
+  }
+
+  td:nth-child(2),
+  td:nth-child(3) {
+    max-width: 70px;
+  }
+
+  td:last-child {
+    max-width: 40px;
   }
 }

@@ -1,18 +1,19 @@
 // packages import
-import { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom"; // ajout suite react-query
-import { useInfiniteQuery } from "@tanstack/react-query"; // ajout suite react-query
+import { useCallback, useEffect, useState } from "react"; // fonctionnalités de base de React
+import { useSearchParams } from "react-router-dom"; // gestion des paramètres d'URL
+import { useInfiniteQuery } from "@tanstack/react-query"; // gestion des requêtes infinies
 
 // services import
-import { searchTracks } from "../services/api";
+import { searchTracks } from "../services/api"; // fonction de recherche de chansons
 
 // components import
-import SearchBar from "../components/SearchBar";
-import ResultsTable from "../components/ResultsTable";
-import Spinner from "../components/Spinner";
+import SearchBar from "../components/SearchBar"; // composant de barre de recherche
+import ResultsTable from "../components/ResultsTable"; // composant de tableau de résultats
+// import Spinner from "../components/Spinner"; // composant de spinner (loading)
+import TableSkeleton from "../components/TableSkeleton"; // composant de squelette de tableau
 
 // types import
-import { Track } from "../types";
+import { Track } from "../types"; // type de données pour les chansons
 
 // style import
 import "../styles/pages/SearchPage.css";
@@ -21,13 +22,15 @@ import "../styles/pages/SearchPage.css";
 import logo from "../assets/img/deezer-logo.png";
 
 const SearchPage = () => {
+  // --- GESTION DES PARAMÈTRES D'URL ---
   // Utilisation des paramètres d'URL pour la persistance de la recherche
-  const [searchParams, setSearchParams] = useSearchParams();
-  const initialSearch = searchParams.get("search") || "";
+  const [searchParams, setSearchParams] = useSearchParams(); // hook pour les paramètres d'URL
+  const initialSearch = searchParams.get("search") || ""; // récupération de la recherche initiale dans l'URL (ou vide)
 
-  // États locaux
-  const [searchQuery, setSearchQuery] = useState<string>(initialSearch);
+  // --- ÉTAT LOCAL ---
+  const [searchQuery, setSearchQuery] = useState<string>(initialSearch); // état local pour la recherche
 
+  // --- SYNCHRONISATION URL/ÉTAT ---
   // Ajout d'un useEffect pour écouter les changements d'URL
   useEffect(() => {
     const searchFromUrl = searchParams.get("search") || "";
@@ -36,22 +39,23 @@ const SearchPage = () => {
     }
   }, [searchParams, searchQuery]); // Cette dépendance signifie que l'effet s'exécute quand l'URL change
 
-  // Configuration de la requête infinie avec React Query
+  // --- CONFIGURATION DE LA REQUÊTE DE RECHERCHE ---
   const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    error,
+    data, // resultats de la recherche
+    fetchNextPage, // fonction pour charger plus de résultats
+    hasNextPage, // indique si il y a plus de résultats à charger
+    isFetchingNextPage, // indique si une requête est en cours
+    isLoading, // indique si une requête est en cours
+    error, // indique si une erreur est survenue
   } = useInfiniteQuery({
+    // Clé unique pour cette requête
     queryKey: ["tracks", searchQuery],
 
     // Ajout du paramètre initial de page
     initialPageParam: 0,
 
+    // Fonction qui récupère les données
     queryFn: async ({ pageParam }) => {
-      // pageParam est déjà le numéro de page/index
       const result = await searchTracks(searchQuery, {
         limit: 50,
         index: pageParam,
@@ -115,7 +119,7 @@ const SearchPage = () => {
         <h1>DEEZER EXPLORER</h1>
       </div>
       <SearchBar initialValue={initialSearch} onSearch={handleSearch} />
-      {isLoading && <Spinner />}
+      {isLoading && <TableSkeleton />}
       {error && <div>Erreur : {(error as Error).message}</div>}
       {searchQuery && allTracks.length > 0 && (
         <ResultsTable tracks={allTracks} />

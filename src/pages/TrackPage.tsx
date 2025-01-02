@@ -4,7 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getTrackDetails } from "../services/api";
 
 // component import
-import Spinner from "../components/Spinner";
+// import Spinner from "../components/Spinner";
+import TrackSkeleton from "../components/TrackSkeleton";
 
 // style import
 import "../styles/pages/TrackPage.css";
@@ -42,7 +43,7 @@ const TrackPage = ({ className = "" }: TrackDetailsProps) => {
 
   // Gestion du chargement et des erreurs
   if (isLoading) {
-    return <Spinner />;
+    return <TrackSkeleton />;
   }
 
   if (error) {

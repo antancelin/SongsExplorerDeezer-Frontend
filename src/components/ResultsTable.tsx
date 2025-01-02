@@ -169,7 +169,14 @@ const ResultsTable = ({ tracks }: ResultsTableProps) => {
             >
               <td className="track-name">
                 <img src={track.album.coverSmall} />
-                {track.title} {track.explicit && <MdExplicit />}
+                <div className="track-title">
+                  <span className="title-text">
+                    {track.title}
+                    {track.explicit && (
+                      <MdExplicit size={18} style={{ marginLeft: "4px" }} />
+                    )}
+                  </span>
+                </div>
               </td>
               <td>{track.artist.name}</td>
               <td>{track.album.title}</td>

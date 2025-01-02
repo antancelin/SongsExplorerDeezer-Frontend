@@ -1,0 +1,212 @@
+/* Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Gradient de base pour tous les éléments de skeleton */
+.skeleton-gradient,
+.skeleton-img,
+.skeleton-header,
+.skeleton-text,
+.skeleton-duration {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+/* Structure de base */
+.results-table.skeleton {
+  width: 100%;
+  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+.skeleton table {
+  width: 90%;
+  border-collapse: collapse;
+}
+
+/* En-têtes */
+.skeleton th {
+  padding: 12px;
+  text-align: left;
+  background-color: #f5f5f5;
+}
+
+.skeleton .header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.skeleton .header-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.skeleton-header {
+  height: 20px;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.skeleton th:last-child {
+  padding: 14px;
+  display: flex;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.skeleton th:last-child .skeleton-header {
+  width: 20px;
+  height: 20px;
+}
+
+/* Lignes et cellules */
+.skeleton-row {
+  margin-bottom: 5px;
+  border: 5px solid white;
+}
+
+.skeleton td {
+  padding: 12px 20px;
+}
+
+.skeleton td:nth-child(1) {
+  max-width: 300px;
+  padding-right: 30px;
+}
+
+.skeleton td:nth-child(2) {
+  max-width: 200px;
+  padding-right: 20px;
+}
+
+.skeleton td:nth-child(3) {
+  max-width: 200px;
+  padding-right: 20px;
+}
+
+.skeleton td:last-child {
+  max-width: 80px;
+  text-align: center;
+}
+
+/* Track name avec image */
+.skeleton .track-name {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.skeleton-img {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  margin-right: 12px;
+}
+
+.skeleton-text {
+  flex: 1;
+  height: 16px;
+  min-width: 0;
+}
+
+.skeleton-duration {
+  width: 40px;
+  height: 16px;
+  margin: 0 auto;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .skeleton.results-table {
+    width: calc(100% - 10px);
+  }
+
+  .skeleton table {
+    width: 100%;
+  }
+
+  .skeleton th,
+  .skeleton td {
+    padding: 12px 15px;
+  }
+
+  .skeleton td:nth-child(1) {
+    max-width: 250px;
+    padding-right: 20px;
+  }
+
+  .skeleton td:nth-child(2),
+  .skeleton td:nth-child(3) {
+    max-width: 150px;
+    padding-right: 15px;
+  }
+
+  .skeleton td:last-child {
+    max-width: 60px;
+  }
+
+  .skeleton-img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .skeleton th,
+  .skeleton td {
+    padding: 8px 12px;
+  }
+
+  .skeleton td:nth-child(1) {
+    max-width: 150px;
+  }
+
+  .skeleton td:nth-child(2),
+  .skeleton td:nth-child(3) {
+    max-width: 100px;
+  }
+
+  .skeleton td:last-child {
+    max-width: 50px;
+  }
+
+  .skeleton-img {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+  }
+}
+
+@media (max-width: 375px) {
+  .skeleton th,
+  .skeleton td {
+    padding: 6px 8px;
+  }
+
+  .skeleton td:nth-child(1) {
+    max-width: 110px;
+  }
+
+  .skeleton td:nth-child(2),
+  .skeleton td:nth-child(3) {
+    max-width: 70px;
+  }
+
+  .skeleton td:last-child {
+    max-width: 40px;
+  }
+}
