@@ -191,7 +191,7 @@
   }
 }
 
-@media (max-width: 375px) {
+@media (max-width: 370px) {
   .skeleton th,
   .skeleton td {
     padding: 6px 8px;
