@@ -244,7 +244,7 @@ td:last-child {
   }
 }
 
-@media (max-width: 390px) {
+@media (max-width: 400px) {
   th,
   td {
     font-size: 11px;
