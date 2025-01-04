@@ -1,7 +1,7 @@
 // components/TrackSkeleton.tsx
 const TrackSkeleton = () => {
   return (
-    <div className="track-details skeleton">
+    <div data-testid="track-skeleton" className="track-details skeleton">
       <button className="back-button skeleton-button">← Retour</button>
 
       {/* Colonne gauche - Infos de la chanson */}

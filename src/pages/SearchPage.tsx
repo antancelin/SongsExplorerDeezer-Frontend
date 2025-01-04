@@ -114,13 +114,17 @@ const SearchPage = () => {
 
   return (
     <div className="app">
-      <div className="title">
-        <img src={logo} alt="deezer-logo" />
-        <h1>DEEZER EXPLORER</h1>
+      <div data-testid="app-header" className="title">
+        <img data-testid="app-logo" src={logo} alt="deezer-logo" />
+        <h1 data-testid="app-title">DEEZER EXPLORER</h1>
       </div>
       <SearchBar initialValue={initialSearch} onSearch={handleSearch} />
       {isLoading && <TableSkeleton />}
-      {error && <div>Erreur : {(error as Error).message}</div>}
+      {error && (
+        <div data-testid="error-message">
+          Erreur : {(error as Error).message}
+        </div>
+      )}
       {searchQuery && allTracks.length > 0 && (
         <ResultsTable tracks={allTracks} />
       )}

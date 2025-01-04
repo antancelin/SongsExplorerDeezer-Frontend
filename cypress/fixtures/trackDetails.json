@@ -1,0 +1,15 @@
+{
+  "id": 123,
+  "title": "Titre de la chanson",
+  "duration": 240,
+  "explicit": true,
+  "album": {
+    "title": "Titre de l'album",
+    "coverBig": "https://example.com/cover.jpg"
+  },
+  "artist": {
+    "name": "Nom de l'artiste",
+    "picture": "https://example.com/artist.jpg",
+    "biography": "Ceci est une biographie fictive de l'artiste."
+  }
+}

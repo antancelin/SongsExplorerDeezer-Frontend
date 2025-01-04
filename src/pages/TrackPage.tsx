@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getTrackDetails } from "../services/api";
 
 // component import
-// import Spinner from "../components/Spinner";
 import TrackSkeleton from "../components/TrackSkeleton";
 
 // style import
@@ -47,7 +46,11 @@ const TrackPage = ({ className = "" }: TrackDetailsProps) => {
   }
 
   if (error) {
-    return <div>Erreur : {(error as Error).message}</div>;
+    return (
+      <div data-testid="error-message" className="error-container">
+        Erreur : {(error as Error).message}
+      </div>
+    );
   }
 
   if (!track) {
@@ -66,32 +69,46 @@ const TrackPage = ({ className = "" }: TrackDetailsProps) => {
 
   return (
     <div className={`track-details ${className}`}>
-      <button onClick={handleBack} className="back-button">
+      <button
+        data-testid="back-button"
+        onClick={handleBack}
+        className="back-button"
+      >
         ← Retour
       </button>
 
       {/* Colonne gauche - Infos de la chanson */}
       <div className="track-header">
         <div className="track-title">
-          <h1>{track.title}</h1>
-          {track.explicit && <MdExplicit className="explicit-icon" />}
+          <h1 data-testid="track-title">{track.title}</h1>
+          {track.explicit && (
+            <MdExplicit data-testid="explicit-icon" className="explicit-icon" />
+          )}
         </div>
-        <p>{formatDuration(track.duration)}</p>
+        <p data-testid="track-duration">{formatDuration(track.duration)}</p>
         <div className="album-info">
-          <h3>{track.album.title}</h3>
-          <img src={track.album.coverBig} alt={track.album.title} />
+          <h3 data-testid="album-title">{track.album.title}</h3>
+          <img
+            data-testid="album-cover"
+            src={track.album.coverBig}
+            alt={track.album.title}
+          />
         </div>
       </div>
 
       {/* Colonne droite - Infos de l'artiste */}
       <div className="artist-info">
-        <img src={track.artist.picture} alt={track.artist.name} />
-        <h2>{track.artist.name}</h2>
+        <img
+          data-testid="artist-picture"
+          src={track.artist.picture}
+          alt={track.artist.name}
+        />
+        <h2 data-testid="artist-name">{track.artist.name}</h2>
 
         {track.artist.biography && (
-          <div className="artist-biography">
-            <h3>Biography</h3>
-            <p>{track.artist.biography}</p>
+          <div data-testid="artist-biography" className="artist-biography">
+            <h3 data-testid="biography-title">Biography</h3>
+            <p data-testid="biography-content">{track.artist.biography}</p>
           </div>
         )}
       </div>

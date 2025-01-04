@@ -89,15 +89,19 @@ const ResultsTable = ({ tracks }: ResultsTableProps) => {
   };
 
   return (
-    <div className="results-table">
+    <div data-testid="results-table" className="results-table">
       <table>
         <thead>
           <tr>
-            <th onClick={() => handleSort("title")} className="sortable-header">
+            <th
+              data-testid="sort-title"
+              onClick={() => handleSort("title")}
+              className="sortable-header"
+            >
               <div className="header-container">
                 <span className="header-content">
                   Title
-                  <span className="sort-arrow">
+                  <span data-testid="title-sort-arrow" className="sort-arrow">
                     {sortKey === "title"
                       ? sortOrder === "asc"
                         ? "↑"
@@ -106,20 +110,25 @@ const ResultsTable = ({ tracks }: ResultsTableProps) => {
                   </span>
                 </span>
                 {sortKey === "title" && (
-                  <button onClick={resetSort} className="reset-sort-button">
+                  <button
+                    data-testid="reset-title-sort"
+                    onClick={resetSort}
+                    className="reset-sort-button"
+                  >
                     Reset
                   </button>
                 )}
               </div>
             </th>
             <th
+              data-testid="sort-artist"
               onClick={() => handleSort("artist")}
               className="sortable-header"
             >
               <div className="header-container">
                 <span className="header-content">
                   Artist
-                  <span className="sort-arrow">
+                  <span data-testid="artist-sort-arrow" className="sort-arrow">
                     {sortKey === "artist"
                       ? sortOrder === "asc"
                         ? "↑"
@@ -128,17 +137,25 @@ const ResultsTable = ({ tracks }: ResultsTableProps) => {
                   </span>
                 </span>
                 {sortKey === "artist" && (
-                  <button onClick={resetSort} className="reset-sort-button">
+                  <button
+                    data-testid="reset-artist-sort"
+                    onClick={resetSort}
+                    className="reset-sort-button"
+                  >
                     Reset
                   </button>
                 )}
               </div>
             </th>
-            <th onClick={() => handleSort("album")} className="sortable-header">
+            <th
+              data-testid="sort-album"
+              onClick={() => handleSort("album")}
+              className="sortable-header"
+            >
               <div className="header-container">
                 <span className="header-content">
                   Album
-                  <span className="sort-arrow">
+                  <span data-testid="album-sort-arrow" className="sort-arrow">
                     {sortKey === "album"
                       ? sortOrder === "asc"
                         ? "↑"
@@ -147,15 +164,19 @@ const ResultsTable = ({ tracks }: ResultsTableProps) => {
                   </span>
                 </span>
                 {sortKey === "album" && (
-                  <button onClick={resetSort} className="reset-sort-button">
+                  <button
+                    data-testid="reset-album-sort"
+                    onClick={resetSort}
+                    className="reset-sort-button"
+                  >
                     Reset
                   </button>
                 )}
               </div>
             </th>
-            <th className="duration-icon">
+            <th data-testid="duration-header" className="duration-icon">
               <div className="timer-reset-container">
-                <CiTimer />
+                <CiTimer data-testid="duration-icon" />
               </div>
             </th>
           </tr>
@@ -163,24 +184,39 @@ const ResultsTable = ({ tracks }: ResultsTableProps) => {
         <tbody>
           {sortedTracks.map((track) => (
             <tr
+              data-testid={`track-row-${track.id}`}
               key={track.id}
               onClick={() => handleTrackClick(track.id)}
               className="clickable-row"
             >
               <td className="track-name">
-                <img src={track.album.coverSmall} />
+                <img
+                  data-testid={`track-cover-${track.id}`}
+                  src={track.album.coverSmall}
+                  alt={track.title}
+                />
                 <div className="track-title">
                   <span className="title-text">
                     {track.title}
                     {track.explicit && (
-                      <MdExplicit size={18} style={{ marginLeft: "4px" }} />
+                      <MdExplicit
+                        data-testid={`track-explicit-${track.id}`}
+                        size={18}
+                        style={{ marginLeft: "4px" }}
+                      />
                     )}
                   </span>
                 </div>
               </td>
-              <td>{track.artist.name}</td>
-              <td>{track.album.title}</td>
-              <td>{formatDuration(track.duration)}</td>
+              <td data-testid={`track-artist-${track.id}`}>
+                {track.artist.name}
+              </td>
+              <td data-testid={`track-album-${track.id}`}>
+                {track.album.title}
+              </td>
+              <td data-testid={`track-duration-${track.id}`}>
+                {formatDuration(track.duration)}
+              </td>
             </tr>
           ))}
         </tbody>

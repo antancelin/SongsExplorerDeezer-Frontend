@@ -52,17 +52,24 @@ const SearchBar = ({ onSearch, initialValue = "" }: SearchBarProps) => {
   };
 
   return (
-    <div className="search-bar">
+    <div data-testid="search-bar" className="search-bar">
       <div className="search-input-container">
-        <BiSearch className="search-icon" />
+        <BiSearch data-testid="search-icon" className="search-icon" />
         <input
+          data-testid="search-input"
           type="text"
           value={searchTerm}
           onChange={handleChange}
           placeholder="Rechercher une chanson..."
           className="search-input"
         />
-        {searchTerm && <BiX className="clear-icon" onClick={handleClear} />}
+        {searchTerm && (
+          <BiX
+            data-testid="clear-search-button"
+            className="clear-icon"
+            onClick={handleClear}
+          />
+        )}
       </div>
     </div>
   );
