@@ -8,44 +8,42 @@ import { BiSearch, BiX } from "react-icons/bi";
 // style import
 import "../styles/components/SearchBar.css";
 
-// Props : ce que le composant va recevoir de son parent
+// what the component will receive from its parent
 interface SearchBarProps {
-  onSearch: (query: string) => void; // Fonction appelée quand l'utilisateur recherche
-  initialValue?: string; // Nouvelle prop pour la valeur initiale, optionnelle grâce au '?'
+  onSearch: (query: string) => void; // function called when user searches
+  initialValue?: string; // new prop for the initial value, optional thanks to the '?'
 }
 
 const SearchBar = ({ onSearch, initialValue = "" }: SearchBarProps) => {
-  // État local pour stocker la valeur de l'input
+  // local state to store the input value
   const [searchTerm, setSearchTerm] = useState<string>(initialValue);
 
-  // Effet pour synchroniser searchTerm avec initialValue
+  // effect to synchronize searchTerm with initialValue
   useEffect(() => {
     setSearchTerm(initialValue);
   }, [initialValue]);
 
-  // Création d'un version debounced de onSearch
-  // useCallback mémorise la fonction pour éviter des recréations inutiles
+  // creating a debounced version of onSearch
   const debouncedSearch = useCallback(
     debounce((value: string) => {
       onSearch(value);
-    }, 800), // délai en ms
+    }, 800), // delay en ms
     [onSearch]
   );
 
-  // effet qui se déclnche quand SearchTerm change
+  // effect that triggers when SearchTerm changes
   useEffect(() => {
     debouncedSearch(searchTerm);
   }, [searchTerm, debouncedSearch]);
 
-  // Fonction appelée à chaque changement dans l'input
+  // function called on each change in input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setSearchTerm(newValue);
-    // même si valeur est vide, on transmet
     debouncedSearch(newValue);
   };
 
-  // fonction pour vider la barre de recherche
+  // function to clear the search bar
   const handleClear = () => {
     setSearchTerm("");
     onSearch("");

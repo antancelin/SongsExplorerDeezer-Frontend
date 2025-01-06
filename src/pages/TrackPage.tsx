@@ -12,13 +12,13 @@ import "../styles/pages/TrackPage.css";
 // icons import
 import { MdExplicit } from "react-icons/md";
 
-// interface pour les props optionnelles
+// interface for optional props
 interface TrackDetailsProps {
   className?: string;
 }
 
 const TrackPage = ({ className = "" }: TrackDetailsProps) => {
-  // Navigation et récupération de l'ID
+  // navigation and ID retrieval
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
@@ -27,20 +27,20 @@ const TrackPage = ({ className = "" }: TrackDetailsProps) => {
     isLoading,
     error,
   } = useQuery({
-    // Clé unique pour cette requête
+    // unique key for this query
     queryKey: ["track", id],
 
-    // Fonction qui récupère les données
+    // function that retrieves data
     queryFn: () => getTrackDetails(id!),
 
-    // Ne pas exécuter la requête si pas d'ID
+    // don't run query if no ID
     enabled: !!id,
 
-    // Garder les données en cache pendant 5 minutes
+    // keep data cached for 5 minutes
     staleTime: 1000 * 60 * 5,
   });
 
-  // Gestion du chargement et des erreurs
+  // loading and error management
   if (isLoading) {
     return <TrackSkeleton />;
   }
@@ -48,19 +48,21 @@ const TrackPage = ({ className = "" }: TrackDetailsProps) => {
   if (error) {
     return (
       <div data-testid="error-message" className="error-container">
-        Erreur : {(error as Error).message}
+        Error : {(error as Error).message}
       </div>
     );
   }
 
   if (!track) {
-    return <div>Chanson non trouvée</div>;
+    return <div>Song not found</div>;
   }
 
+  // function to navigate back
   const handleBack = () => {
     navigate(-1);
   };
 
+  // function to format duration
   const formatDuration = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -77,7 +79,7 @@ const TrackPage = ({ className = "" }: TrackDetailsProps) => {
         ← Retour
       </button>
 
-      {/* Colonne gauche - Infos de la chanson */}
+      {/* left column - song info */}
       <div className="track-header">
         <div className="track-title">
           <h1 data-testid="track-title">{track.title}</h1>
@@ -96,7 +98,7 @@ const TrackPage = ({ className = "" }: TrackDetailsProps) => {
         </div>
       </div>
 
-      {/* Colonne droite - Infos de l'artiste */}
+      {/* right column - artist info */}
       <div className="artist-info">
         <img
           data-testid="artist-picture"

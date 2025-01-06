@@ -1,6 +1,6 @@
-/* Styles globaux de l'application */
+/* basic styles of the app */
 :root {
-  /* Variables de couleurs */
+  /* colors variables */
   --primary-color: #a237ff;
   --secondary-color: #23232c;
   --background-color: #fdfcfe;

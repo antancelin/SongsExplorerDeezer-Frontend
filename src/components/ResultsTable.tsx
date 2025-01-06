@@ -14,27 +14,27 @@ import { CiTimer } from "react-icons/ci";
 
 // component props
 interface ResultsTableProps {
-  tracks: Track[]; // liste des chansons à afficher
+  tracks: Track[]; // list of songs to display
 }
 
 // type import
 import { SortKey, SortOrder } from "../types";
 
 const ResultsTable = ({ tracks }: ResultsTableProps) => {
-  // import du navigate
+  // navigate import
   const navigate = useNavigate();
 
-  // states pour le tri
+  // states  for sorting
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 
-  // fonction de tri des résultats
+  // results sorting function
   const sortedTracks = sortKey
     ? [...tracks].sort((a, b) => {
         let compareA: string;
         let compareB: string;
 
-        // sélection des valeurs à comparer sela la clé de tri
+        // selection of values ​​to compare according to the sort key
         switch (sortKey) {
           case "artist":
             compareA = a.artist.name.toLowerCase();
@@ -51,38 +51,38 @@ const ResultsTable = ({ tracks }: ResultsTableProps) => {
             compareB = b.title.toLowerCase();
         }
 
-        // application de l'ordre de tri
+        // applying sort order
         return sortOrder === "asc"
           ? compareA.localeCompare(compareB)
           : compareB.localeCompare(compareA);
       })
-    : tracks; // si aucune tri selectionné, affichage dans l'ordre de l'API
+    : tracks; // if no sorting selected, display in API order
 
-  // gestion du changement de tri
+  // sort change management
   const handleSort = (key: SortKey) => {
     if (key === sortKey) {
-      // si même colonne, on inverse l'ordre
+      // if same column, we reverse the order
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
-      // si nouvelle colonne, on trie par ordre ascendant
+      // if new column, we sort in ascending order
       setSortKey(key);
       setSortOrder("asc");
     }
   };
 
-  // fonction de navigtion au 'clic' sur une chanson
+  // navigation function when 'clicking' on a song
   const handleTrackClick = (trackId: number) => {
     navigate(`/track/${trackId}`);
   };
 
-  // fonction utilitaire pour formater la durée (sec) en minutes:secondes
+  // utility function to format duration (sec) in minutes:seconds
   const formatDuration = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  // Fonction de réinitialisation
+  // reset sort function
   const resetSort = () => {
     setSortKey(null);
     setSortOrder("asc");

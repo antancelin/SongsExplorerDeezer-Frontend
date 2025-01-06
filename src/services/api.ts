@@ -1,10 +1,10 @@
 // type import
 import { Track } from "../types";
 
-// URL de base de notre API, stockée dans le fichier .env
+// base URL of our API, stored in the .env file
 const API_URL = `${import.meta.env.VITE_API_URL}/graphql`;
 
-// interface pour la réponse de recherche
+// interface for search response
 interface SearchReponse {
   data: Track[];
   total: number;
@@ -12,23 +12,24 @@ interface SearchReponse {
   next: string | null;
 }
 
-// interface pour un type générique pour les variables GraphQL
+// interface for a generic type for GraphQL variables
 interface GraphQLVariables {
   [key: string]: string | number | undefined;
 }
 
+// interface for search parameters
 interface SearchParams {
   limit?: number;
   index?: number;
 }
 
-// fonction utilitaire pour faire des requêtes GraphQL, gère l'appel à l'API et la gestion d'erreurs
+// utility function for making GraphQL queries, handles API call and error handling
 async function fetchGraphQL<T>(
   query: string,
   variables: GraphQLVariables
 ): Promise<T> {
   try {
-    // appel à l'API GraphQL avec fetch
+    // Calling GraphQL API with fetch
     const response = await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -40,34 +41,34 @@ async function fetchGraphQL<T>(
       }),
     });
 
-    // vérification si la requête a réussi
+    // checking if the request was successful
     if (!response.ok) {
-      throw new Error("Erreur réseau");
+      throw new Error("Network error");
     }
 
-    // conversion de la réponse en JSON
+    // converting response to JSON
     const json = await response.json();
 
-    // vérification des erreurs GraphQL
+    // GraphQL error checking
     if (json.errors) {
       throw new Error(json.errors[0].message);
     }
 
-    // retourne les données
+    // returns the data
     return json.data;
   } catch (error) {
-    console.error("Erreur lors de l'appel à l'API:", error);
+    console.error("Error calling API:", error);
     throw error;
   }
 }
 
-// fonction pour rechercher des chansons, remplace l'ancienne requête 'SEARCH_TRACKS'
+// function to search for songs, replaces the old query 'SEARCH_TRACKS'
 export async function searchTracks(
   query: string,
   params: SearchParams = {}
 ): Promise<SearchReponse> {
   const { limit = 50, index = 0 } = params;
-  // la requête GraphQL en tant que string
+  // GraphQL query as string
   const graphqlQuery = `
     query SearchTracks($query: String!, $limit: Int) {
       searchTracks(query: $query, limit: $limit) {
@@ -95,17 +96,17 @@ export async function searchTracks(
     }
   `;
 
-  // appel à notre fonction utilitaire avec la requête et les variables
+  // call our utility function with query and variables
   const response = await fetchGraphQL<{ searchTracks: SearchReponse }>(
     graphqlQuery,
     { query, limit, index }
   );
 
-  // retourne directement les données de searchTracks
+  // directly returns data from searchTracks
   return response.searchTracks;
 }
 
-// fonction pour obtenir les détails d'une chanson, remplace l'ancienne requête 'GET_TRACK_DETAILS'
+// function to get song details, replaces old 'GET_TRACK_DETAILS' query
 export async function getTrackDetails(trackId: string): Promise<Track> {
   const graphqlQuery = `
       query GetTrackDetails($trackId: ID!) {
@@ -138,7 +139,7 @@ export async function getTrackDetails(trackId: string): Promise<Track> {
   return response.getTrackDetails;
 }
 
-// hook personnalisé pour la recherche de chansons avec gestion de l'URL, ceci sera utilisé avec React Query dans nos composants
+// custom hook for searching songs with URL handling, this will be used with React Query in our components
 export const trackKeys = {
   all: ["tracks"] as const,
   search: (query: string) => [...trackKeys.all, "search", query] as const,

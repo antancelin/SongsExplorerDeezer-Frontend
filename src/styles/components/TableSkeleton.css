@@ -1,4 +1,4 @@
-/* Animation */
+/* animation */
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
@@ -8,7 +8,7 @@
   }
 }
 
-/* Gradient de base pour tous les éléments de skeleton */
+/* basic gradient for all skeleton elements */
 .skeleton-gradient,
 .skeleton-img,
 .skeleton-header,
@@ -20,7 +20,7 @@
   border-radius: 4px;
 }
 
-/* Structure de base */
+/* basic structure */
 .results-table.skeleton {
   width: 100%;
   margin: 20px auto;
@@ -34,7 +34,7 @@
   border-collapse: collapse;
 }
 
-/* En-têtes */
+/* headers */
 .skeleton th {
   padding: 12px;
   text-align: left;
@@ -72,7 +72,7 @@
   height: 20px;
 }
 
-/* Lignes et cellules */
+/* rows and cells */
 .skeleton-row {
   margin-bottom: 5px;
   border: 5px solid white;
@@ -102,7 +102,7 @@
   text-align: center;
 }
 
-/* Track name avec image */
+/* track name with img */
 .skeleton .track-name {
   display: flex;
   align-items: center;
@@ -128,7 +128,7 @@
   margin: 0 auto;
 }
 
-/* Media Queries */
+/* media query for responsive */
 @media (max-width: 768px) {
   .skeleton.results-table {
     width: calc(100% - 10px);

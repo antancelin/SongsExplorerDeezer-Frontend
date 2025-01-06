@@ -1,42 +1,38 @@
-// Cette interface définit la structure d'une piste/chanson
-// Chaque propriété est typée, donc TypeScript nous alertera si on essaie d'utiliser
-// un type incorrect (par exemple, mettre un string à la place d'un number pour l'id)
+// track interface
 export interface Track {
-  id: number; // L'identifiant unique de la chanson
-  title: string; // Le titre de la chanson
-  duration: number; // La durée en secondes
-  explicit: boolean; // paroles explicit ou non
-  artist: Artist; // Les informations de l'artiste (voir l'interface Artist ci-dessous)
-  album: Album; // Les informations de l'album (voir l'interface Album ci-dessous)
+  id: number;
+  title: string;
+  duration: number;
+  explicit: boolean;
+  artist: Artist;
+  album: Album;
 }
 
-// Interface pour les données d'un artiste
-// Quand on recevra les données de l'API Deezer, on s'attend à recevoir ces informations
+// artist interface
 export interface Artist {
-  id: number; // L'identifiant unique de l'artiste
-  name: string; // Le nom de l'artiste
-  picture: string; // L'URL de la photo de l'artiste
-  biography?: string; // Biographie (depuis Discogs) - "?" car optionnel, peut être non présente immédiatement
-  discogsId?: number; // ID Discogs de l'artiste - "?" car optionnel, utile pour faire correspondre les éléments entre l'api Deezer et Discogs
+  id: number;
+  name: string;
+  picture: string;
+  biography?: string;
+  discogsId?: number;
 }
 
-// Interface pour les données d'un album
+// album interface
 export interface Album {
-  id: number; // L'identifiant unique de l'album
-  title: string; // Le titre de l'album
-  coverSmall: string; // L'URL de la pochette de l'album (petite)
-  coverBig: string; // L'URL de la pochette de l'album (moyenne)
+  id: number;
+  title: string;
+  coverSmall: string;
+  coverBig: string;
 }
 
-// Interface pour la réponse de l'API lors d'une recherche
-// Cette structure nous permet de gérer la pagination des résultats
+// interface for API response when searching
 export interface SearchResponse {
-  data: Track[]; // Un tableau de chansons
-  total: number; // Le nombre total de résultats
-  prev?: string; // URL optionnelle (?) pour la page précédente
-  next?: string; // URL optionnelle (?) pour la page suivante
+  data: Track[];
+  total: number;
+  prev?: string;
+  next?: string;
 }
 
-// type pour le state de tri
+// type for sort state
 export type SortKey = "title" | "artist" | "album";
 export type SortOrder = "asc" | "desc";

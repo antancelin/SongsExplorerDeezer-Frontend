@@ -1,14 +1,15 @@
+/* basic styles */
 .track-details {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 80px 20px 20px; /* Augmenté le padding-top pour le bouton retour */
+  padding: 80px 20px 20px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
   position: relative;
 }
 
-/* Bouton retour */
+/* back button */
 .back-button {
   position: absolute;
   top: 20px;
@@ -27,7 +28,7 @@
   color: white;
 }
 
-/* Colonne gauche - Infos de la chanson */
+/* left column - song info */
 .track-header {
   padding: 20px;
   background-color: #f8f8f8;
@@ -73,7 +74,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Colonne droite - Infos de l'artiste */
+/* right column - artist info */
 .artist-info {
   padding: 20px;
   background-color: #f8f8f8;
@@ -116,7 +117,7 @@
   text-align: justify;
 }
 
-/* Media Query pour le responsive */
+/* media query for responsive */
 @media (max-width: 768px) {
   .track-details {
     grid-template-columns: 1fr;

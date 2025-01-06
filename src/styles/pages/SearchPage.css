@@ -1,4 +1,4 @@
-/* Styles de base */
+/* basic styles */
 .title {
   text-align: center;
   margin: 40px;
@@ -28,7 +28,7 @@
   font-style: italic;
 }
 
-/* Styles pour tablettes et mobiles */
+/* styles for tablets and mobiles */
 @media (max-width: 768px) {
   .title {
     margin: 15px;
@@ -44,7 +44,7 @@
   }
 }
 
-/* Styles pour très petits écrans */
+/* styles for very small screens */
 @media (max-width: 480px) {
   .title {
     margin: 10px;

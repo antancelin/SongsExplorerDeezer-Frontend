@@ -1,10 +1,10 @@
-// components/TrackSkeleton.tsx
+// skeleton component for the TrackDetails component
 const TrackSkeleton = () => {
   return (
     <div data-testid="track-skeleton" className="track-details skeleton">
       <button className="back-button skeleton-button">← Retour</button>
 
-      {/* Colonne gauche - Infos de la chanson */}
+      {/* left column - song info */}
       <div className="track-header">
         <div className="track-title">
           <div className="skeleton-title"></div>
@@ -16,7 +16,7 @@ const TrackSkeleton = () => {
         </div>
       </div>
 
-      {/* Colonne droite - Infos de l'artiste */}
+      {/* right column - artist info */}
       <div className="artist-info">
         <div className="skeleton-artist-img"></div>
         <div className="skeleton-artist-name"></div>

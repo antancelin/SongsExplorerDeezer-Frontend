@@ -1,109 +1,18 @@
-// describe("Home", () => {
-//   beforeEach(() => {
-//     cy.visit("/"); // visite la page d'accueil avant chaque test
-//   });
-
-//   it("affiche le titre et le logo correctement", () => {
-//     cy.get(".title img")
-//       .should("have.attr", "src")
-//       .and("include", "deezer-logo.png");
-//     cy.get(".title h1").should("have.text", "DEEZER EXPLORER");
-//   });
-
-//   it("affiche la barre de recherche", () => {
-//     cy.get(".search-bar input").should("be.visible");
-//     cy.get(".search-bar input").should(
-//       "have.attr",
-//       "placeholder",
-//       "Rechercher une chanson..."
-//     );
-//   });
-
-//   it("permet de rechercher une chanson", () => {
-//     const searchTerm = "Nikes";
-//     cy.get(".search-bar input").type(searchTerm);
-//     cy.get(".search-bar input").should("have.value", searchTerm);
-//     // attendre que la recherche soir effectuée (debounce de 800ms)
-//     cy.wait(1000);
-//     cy.get(".results-table").should("exist");
-//   });
-
-//   it("permet de trier les résultats", () => {
-//     cy.get(".search-bar input").type("Nikes");
-//     cy.wait(1000);
-//     cy.get("th.sortable-header").first().click(); // cliquer sur le header 'title'
-//     cy.get("th.sortable-header")
-//       .first()
-//       .find(".sort-arrow")
-//       .should("contain", "↑");
-//     cy.get("th.sortable-header").first().click(); // cliquer à nouveau pour inverser l'ordre
-//     cy.get("th.sortable-header")
-//       .first()
-//       .find(".sort-arrow")
-//       .should("contain", "↓");
-//   });
-
-//   it("permet de réinitialiser le tri", () => {
-//     cy.get(".search-bar input").type("Nikes");
-//     cy.wait(1000);
-//     cy.get("th.sortable-header").first().click(); // trier par titre
-//     cy.get(".reset-sort-button").first().click();
-//     cy.get("th.sortable-header")
-//       .first()
-//       .find(".sort-arrow")
-//       .should("contain", "↕");
-//   });
-
-//   it("conserve la recherche après rechargement de la page", () => {
-//     cy.get(".search-bar input").type("Daft Punk");
-//     cy.wait(1000); // attendre le debounce
-//     cy.reload();
-//     cy.get(".search-bar input").should("have.value", "Daft Punk");
-//   });
-
-//   it("charge plus de résultats lors du défilement", () => {
-//     cy.get(".search-bar input").type("Pop");
-//     cy.wait(1000);
-//     cy.get(".results-table tr")
-//       .its("length")
-//       .then((initialLength) => {
-//         cy.scrollTo("bottom");
-//         cy.wait(1000);
-//         cy.get(".results-table tr")
-//           .its("length")
-//           .should("be.gt", initialLength);
-//       });
-//   });
-
-//   it("navigue vers la page de détail d'une chanson lors du clic", () => {
-//     cy.get(".search-bar input").type("Nikes");
-//     cy.wait(1000);
-//     cy.get(".clickable-row").first().click();
-//     cy.url().should("include", "/track/");
-//   });
-
-//   it("gère le cas d'erreur", () => {
-//     // simulation d'une erreur réseau
-//     cy.intercept("POST", "**/graphql**", { statusCode: 500 }).as("searchError");
-//     cy.get(".search-bar input").type("Error Test");
-//     cy.wait("@searchError");
-//     cy.contains("Erreur :").should("be.visible");
-//   });
-// });
-
+/// <reference types="cypress" />
+// Search Page Tests
 describe("Home", () => {
   beforeEach(() => {
     cy.visit("/");
   });
 
-  it("affiche le titre et le logo correctement", () => {
+  it("displays title and logo correctly", () => {
     cy.get('[data-testid="app-logo"]')
       .should("have.attr", "src")
       .and("include", "deezer-logo.png");
     cy.get('[data-testid="app-title"]').should("have.text", "DEEZER EXPLORER");
   });
 
-  it("affiche la barre de recherche", () => {
+  it("display search bar", () => {
     cy.get('[data-testid="search-input"]').should("be.visible");
     cy.get('[data-testid="search-input"]').should(
       "have.attr",
@@ -112,34 +21,190 @@ describe("Home", () => {
     );
   });
 
-  it("permet de rechercher une chanson", () => {
+  it("allows you to search for a song", () => {
+    // intercept GraphQL query with exact expected structure
+    cy.intercept("POST", "/graphql", (req) => {
+      if (req.body.query.includes("SearchTracks")) {
+        req.reply({
+          body: {
+            data: {
+              searchTracks: {
+                data: [
+                  {
+                    id: 1,
+                    title: "Nikes",
+                    duration: 180,
+                    explicit: false,
+                    artist: {
+                      id: 1,
+                      name: "Frank Ocean",
+                      picture: "artist-picture.jpg",
+                    },
+                    album: {
+                      id: 1,
+                      title: "Blonde",
+                      coverSmall: "album-cover-small.jpg",
+                      coverBig: "album-cover-big.jpg",
+                    },
+                  },
+                ],
+                total: 1,
+                prev: null,
+                next: null,
+              },
+            },
+          },
+        });
+      }
+    }).as("searchTracksQuery");
+
+    // perform the search
     const searchTerm = "Nikes";
     cy.get('[data-testid="search-input"]').type(searchTerm);
     cy.get('[data-testid="search-input"]').should("have.value", searchTerm);
-    // attendre que la recherche soit effectuée (debounce de 800ms)
-    cy.wait(1000);
+
+    // wait for GraphQL API response
+    cy.wait("@searchTracksQuery");
+
+    // check that the results table is displayed
     cy.get('[data-testid="results-table"]').should("exist");
   });
 
-  it("permet de trier les résultats", () => {
+  it("allows you to sort the results", () => {
+    // intercept GraphQL query with multiple results to test sorting
+    cy.intercept("POST", "/graphql", (req) => {
+      if (req.body.query.includes("SearchTracks")) {
+        req.reply({
+          body: {
+            data: {
+              searchTracks: {
+                data: [
+                  {
+                    id: 1,
+                    title: "Apples",
+                    duration: 180,
+                    explicit: false,
+                    artist: {
+                      id: 1,
+                      name: "Artist A",
+                      picture: "artist-picture.jpg",
+                    },
+                    album: {
+                      id: 1,
+                      title: "Album A",
+                      coverSmall: "album-cover-small.jpg",
+                      coverBig: "album-cover-big.jpg",
+                    },
+                  },
+                  {
+                    id: 2,
+                    title: "Bananas",
+                    duration: 200,
+                    explicit: true,
+                    artist: {
+                      id: 2,
+                      name: "Artist B",
+                      picture: "artist-picture.jpg",
+                    },
+                    album: {
+                      id: 2,
+                      title: "Album B",
+                      coverSmall: "album-cover-small.jpg",
+                      coverBig: "album-cover-big.jpg",
+                    },
+                  },
+                ],
+                total: 2,
+                prev: null,
+                next: null,
+              },
+            },
+          },
+        });
+      }
+    }).as("searchTracksQuery");
+
+    // perform the search
     cy.get('[data-testid="search-input"]').type("Nikes");
-    cy.wait(1000);
+
+    // wait for GraphQL API response
+    cy.wait("@searchTracksQuery");
+
+    // test sorting functionality
     cy.get('[data-testid="sort-title"]').click();
     cy.get('[data-testid="title-sort-arrow"]').should("contain", "↑");
     cy.get('[data-testid="sort-title"]').click();
     cy.get('[data-testid="title-sort-arrow"]').should("contain", "↓");
   });
 
-  it("permet de réinitialiser le tri", () => {
+  it("allows you to reset the sorting", () => {
+    // intercept GraphQL query with test data
+    cy.intercept("POST", "/graphql", (req) => {
+      if (req.body.query.includes("SearchTracks")) {
+        req.reply({
+          body: {
+            data: {
+              searchTracks: {
+                data: [
+                  {
+                    id: 1,
+                    title: "Apples",
+                    duration: 180,
+                    explicit: false,
+                    artist: {
+                      id: 1,
+                      name: "Artist A",
+                      picture: "artist-picture.jpg",
+                    },
+                    album: {
+                      id: 1,
+                      title: "Album A",
+                      coverSmall: "album-cover-small.jpg",
+                      coverBig: "album-cover-big.jpg",
+                    },
+                  },
+                  {
+                    id: 2,
+                    title: "Bananas",
+                    duration: 200,
+                    explicit: true,
+                    artist: {
+                      id: 2,
+                      name: "Artist B",
+                      picture: "artist-picture.jpg",
+                    },
+                    album: {
+                      id: 2,
+                      title: "Album B",
+                      coverSmall: "album-cover-small.jpg",
+                      coverBig: "album-cover-big.jpg",
+                    },
+                  },
+                ],
+                total: 2,
+                prev: null,
+                next: null,
+              },
+            },
+          },
+        });
+      }
+    }).as("searchTracksQuery");
+
+    // perform the search
     cy.get('[data-testid="search-input"]').type("Nikes");
-    cy.wait(1000);
+
+    // wait for GraphQL API response
+    cy.wait("@searchTracksQuery");
+
+    // array is loaded we can test resetting the sort
     cy.get('[data-testid="sort-title"]').click();
     cy.get('[data-testid="reset-title-sort"]').click();
     cy.get('[data-testid="title-sort-arrow"]').should("contain", "↕");
   });
 
-  it("affiche correctement la colonne durée", () => {
-    // D'abord, intercepter la requête GraphQL pour garantir des résultats
+  it("correctly displays the duration column", () => {
+    // intercept the GraphQL query to guarantee results
     cy.intercept("POST", "/graphql", (req) => {
       if (req.body.query.includes("SearchTracks")) {
         req.reply({
@@ -163,18 +228,18 @@ describe("Home", () => {
       }
     }).as("searchTracksQuery");
 
-    // Effectuer une recherche pour afficher le tableau
+    // perform the search to display the table
     cy.get('[data-testid="search-input"]').type("test");
 
-    // Attendre que la requête soit complétée
+    // wait for GraphQL API response
     cy.wait("@searchTracksQuery");
 
-    // Maintenant que le tableau est affiché, vérifier la colonne durée
+    // table is displayed, check the duration column
     cy.get('[data-testid="duration-header"]').should("be.visible");
     cy.get('[data-testid="duration-icon"]').should("exist");
   });
 
-  it("gère correctement différents formats de durée", () => {
+  it("correctly handles different duration formats", () => {
     cy.intercept("POST", "/graphql", (req) => {
       if (req.body.query.includes("SearchTracks")) {
         req.reply({
@@ -209,44 +274,172 @@ describe("Home", () => {
       }
     }).as("searchTracksQuery");
 
+    // perform the search
     cy.get('[data-testid="search-input"]').type("test");
+
+    // wait for GraphQL API response
     cy.wait("@searchTracksQuery");
 
-    // Vérifier les différents formats de durée
+    // check different duration formats
     cy.get('[data-testid="track-duration-1"]').should("contain", "0:45");
     cy.get('[data-testid="track-duration-2"]').should("contain", "3:00");
     cy.get('[data-testid="track-duration-3"]').should("contain", "60:00");
   });
 
-  it("conserve la recherche après rechargement de la page", () => {
+  it("retains search after page reload", () => {
     cy.get('[data-testid="search-input"]').type("Daft Punk");
     cy.wait(1000);
     cy.reload();
     cy.get('[data-testid="search-input"]').should("have.value", "Daft Punk");
   });
 
-  it("charge plus de résultats lors du défilement", () => {
+  it("load more results when scrolling", () => {
+    // first page of results
+    cy.intercept("POST", "/graphql", (req) => {
+      if (
+        req.body.query.includes("SearchTracks") &&
+        !req.body.variables.index
+      ) {
+        // answer for the first page
+        req.reply({
+          body: {
+            data: {
+              searchTracks: {
+                data: Array.from({ length: 20 }, (_, i) => ({
+                  id: i + 1,
+                  title: `Pop Song ${i + 1}`,
+                  duration: 180,
+                  explicit: false,
+                  artist: {
+                    id: i + 1,
+                    name: `Artist ${i + 1}`,
+                    picture: "artist-picture.jpg",
+                  },
+                  album: {
+                    id: i + 1,
+                    title: `Album ${i + 1}`,
+                    coverSmall: "album-cover-small.jpg",
+                    coverBig: "album-cover-big.jpg",
+                  },
+                })),
+                total: 40,
+                prev: null,
+                next: "nextpage",
+              },
+            },
+          },
+        });
+      }
+    }).as("initialSearch");
+
+    // next page of results
+    cy.intercept("POST", "/graphql", (req) => {
+      if (
+        req.body.query.includes("SearchTracks") &&
+        req.body.variables.index > 0
+      ) {
+        // answer for next page
+        req.reply({
+          body: {
+            data: {
+              searchTracks: {
+                data: Array.from({ length: 20 }, (_, i) => ({
+                  id: i + 21,
+                  title: `Pop Song ${i + 21}`,
+                  duration: 180,
+                  explicit: false,
+                  artist: {
+                    id: i + 21,
+                    name: `Artist ${i + 21}`,
+                    picture: "artist-picture.jpg",
+                  },
+                  album: {
+                    id: i + 21,
+                    title: `Album ${i + 21}`,
+                    coverSmall: "album-cover-small.jpg",
+                    coverBig: "album-cover-big.jpg",
+                  },
+                })),
+                total: 40,
+                prev: "prevpage",
+                next: null,
+              },
+            },
+          },
+        });
+      }
+    }).as("nextPageSearch");
+
+    // perform the initial search
     cy.get('[data-testid="search-input"]').type("Pop");
-    cy.wait(1000);
-    cy.get('[data-testid^="track-row-"]')
-      .its("length")
-      .then((initialLength) => {
-        cy.scrollTo("bottom");
-        cy.wait(1000);
-        cy.get('[data-testid^="track-row-"]')
-          .its("length")
-          .should("be.gt", initialLength);
-      });
+
+    // wait for initial loading
+    cy.wait("@initialSearch");
+
+    // check the initial number of lines
+    cy.get('[data-testid^="track-row-"]').should("have.length", 20);
+
+    // trigger scroll
+    cy.scrollTo("bottom");
+
+    // wait for the next page to load
+    cy.wait("@nextPageSearch");
+
+    // Check if more results after scrolling
+    cy.get('[data-testid^="track-row-"]').should("have.length", 40);
   });
 
-  it("navigue vers la page de détail d'une chanson lors du clic", () => {
+  it("navigates to a song's detail page when clicked", () => {
+    // intercept GraphQL search query
+    cy.intercept("POST", "/graphql", (req) => {
+      if (req.body.query.includes("SearchTracks")) {
+        req.reply({
+          body: {
+            data: {
+              searchTracks: {
+                data: [
+                  {
+                    id: 123,
+                    title: "Nikes",
+                    duration: 180,
+                    explicit: false,
+                    artist: {
+                      id: 1,
+                      name: "Frank Ocean",
+                      picture: "artist-picture.jpg",
+                    },
+                    album: {
+                      id: 1,
+                      title: "Blonde",
+                      coverSmall: "album-cover-small.jpg",
+                      coverBig: "album-cover-big.jpg",
+                    },
+                  },
+                ],
+                total: 1,
+                prev: null,
+                next: null,
+              },
+            },
+          },
+        });
+      }
+    }).as("searchTracksQuery");
+
+    // perform the search
     cy.get('[data-testid="search-input"]').type("Nikes");
-    cy.wait(1000);
-    cy.get('[data-testid^="track-row-"]').first().click();
-    cy.url().should("include", "/track/");
+
+    // wait for GraphQL API response
+    cy.wait("@searchTracksQuery");
+
+    // check that the line is present and click on it
+    cy.get('[data-testid="track-row-123"]').click();
+
+    // verify that the URL has changed to include the track ID
+    cy.url().should("include", "/track/123");
   });
 
-  it("gère le cas d'erreur", () => {
+  it("handles error case", () => {
     cy.intercept("POST", "**/graphql**", { statusCode: 500 }).as("searchError");
     cy.get('[data-testid="search-input"]').type("Error Test");
     cy.wait("@searchError");

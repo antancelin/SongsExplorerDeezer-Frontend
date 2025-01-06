@@ -1,4 +1,4 @@
-/* Styles de base */
+/* basic styles */
 .search-bar {
   width: 100%;
   max-width: 600px;
@@ -25,9 +25,7 @@
   border-radius: 4px;
   font-size: 16px;
   background-color: #f4f2f7;
-  /* Enlever l'outline par défaut */
   outline: none;
-  /* Définir une transition pour un effet plus doux */
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -35,10 +33,9 @@
   background-color: #eae7ed;
 }
 
-/* Style quand l'input est focus */
+/* style when input is focused */
 .search-input:focus {
-  border-color: var(--primary-color); /* Couleur Deezer */
-  /* Ajouter une ombre subtile de la même couleur */
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 1px var(--primary-color);
 }
 
@@ -52,10 +49,10 @@
 }
 
 .clear-icon:hover {
-  color: var(--primary-color); /* Couleur Deezer au hover */
+  color: var(--primary-color);
 }
 
-/* Styles pour tablettes et mobiles */
+/* media query for responsive */
 @media (max-width: 768px) {
   .search-bar {
     width: calc(100% - 20px);

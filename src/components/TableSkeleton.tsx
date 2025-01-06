@@ -1,21 +1,15 @@
+// skeleton component for the ResultsTable component
+
 // style import
 import "../styles/components/TableSkeleton.css";
 
 const TableSkeleton = () => {
-  // création de 5 lignes de squelette
+  // creation of 5 skeleton lines
   const skeletonRows = Array(15).fill(null);
 
   return (
     <div className="results-table skeleton">
       <table>
-        {/* <thead>
-          <tr>
-            <th className="skeleton-header"></th>
-            <th className="skeleton-header"></th>
-            <th className="skeleton-header"></th>
-            <th className="skeleton-header"></th>
-          </tr>
-        </thead> */}
         <thead>
           <tr>
             <th className="sortable-header">

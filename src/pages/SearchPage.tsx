@@ -1,19 +1,18 @@
 // packages import
-import { useCallback, useEffect, useState } from "react"; // fonctionnalités de base de React
-import { useSearchParams } from "react-router-dom"; // gestion des paramètres d'URL
-import { useInfiniteQuery } from "@tanstack/react-query"; // gestion des requêtes infinies
+import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 // services import
-import { searchTracks } from "../services/api"; // fonction de recherche de chansons
+import { searchTracks } from "../services/api";
 
 // components import
-import SearchBar from "../components/SearchBar"; // composant de barre de recherche
-import ResultsTable from "../components/ResultsTable"; // composant de tableau de résultats
-// import Spinner from "../components/Spinner"; // composant de spinner (loading)
-import TableSkeleton from "../components/TableSkeleton"; // composant de squelette de tableau
+import SearchBar from "../components/SearchBar";
+import ResultsTable from "../components/ResultsTable";
+import TableSkeleton from "../components/TableSkeleton";
 
 // types import
-import { Track } from "../types"; // type de données pour les chansons
+import { Track } from "../types";
 
 // style import
 import "../styles/pages/SearchPage.css";
@@ -22,39 +21,39 @@ import "../styles/pages/SearchPage.css";
 import logo from "../assets/img/deezer-logo.png";
 
 const SearchPage = () => {
-  // --- GESTION DES PARAMÈTRES D'URL ---
-  // Utilisation des paramètres d'URL pour la persistance de la recherche
-  const [searchParams, setSearchParams] = useSearchParams(); // hook pour les paramètres d'URL
-  const initialSearch = searchParams.get("search") || ""; // récupération de la recherche initiale dans l'URL (ou vide)
+  // MANAGING URL PARAMETERS
+  // using URL parameters for search persistence
+  const [searchParams, setSearchParams] = useSearchParams(); // hook for URL parameters
+  const initialSearch = searchParams.get("search") || ""; // retrieving initial search in URL (or empty)
 
-  // --- ÉTAT LOCAL ---
-  const [searchQuery, setSearchQuery] = useState<string>(initialSearch); // état local pour la recherche
+  // LOCAL STATE
+  const [searchQuery, setSearchQuery] = useState<string>(initialSearch); // local state for search
 
-  // --- SYNCHRONISATION URL/ÉTAT ---
-  // Ajout d'un useEffect pour écouter les changements d'URL
+  // URL/STATE SYNCHRONIZATION
+  // added a useEffect to listen for URL changes
   useEffect(() => {
     const searchFromUrl = searchParams.get("search") || "";
     if (searchFromUrl !== searchQuery) {
       setSearchQuery(searchFromUrl);
     }
-  }, [searchParams, searchQuery]); // Cette dépendance signifie que l'effet s'exécute quand l'URL change
+  }, [searchParams, searchQuery]);
 
-  // --- CONFIGURATION DE LA REQUÊTE DE RECHERCHE ---
+  // SEARCH QUERY CONFIGURATION
   const {
-    data, // resultats de la recherche
-    fetchNextPage, // fonction pour charger plus de résultats
-    hasNextPage, // indique si il y a plus de résultats à charger
-    isFetchingNextPage, // indique si une requête est en cours
-    isLoading, // indique si une requête est en cours
-    error, // indique si une erreur est survenue
+    data, // data from the query
+    fetchNextPage, // function to fetch the next page
+    hasNextPage, // indicates if there is a next page
+    isFetchingNextPage, // indicates if a request is in progress
+    isLoading, // indicates if a request is in progress
+    error, // error from the query
   } = useInfiniteQuery({
-    // Clé unique pour cette requête
+    // unique key for this query
     queryKey: ["tracks", searchQuery],
 
-    // Ajout du paramètre initial de page
+    // initial page parameter
     initialPageParam: 0,
 
-    // Fonction qui récupère les données
+    // function that retrieves data
     queryFn: async ({ pageParam }) => {
       const result = await searchTracks(searchQuery, {
         limit: 50,
@@ -68,16 +67,15 @@ const SearchPage = () => {
         (total, page) => total + page.data.length,
         0
       );
-      // Si nous avons chargé moins d'éléments que le total disponible,
-      // retourne l'index de la prochaine page, sinon undefined
+      // returning undefined if all items are loaded or the total number of items
       return loadedItems < lastPage.total ? loadedItems : undefined;
     },
 
-    // Ne pas exécuter la requête si la recherche est vide
+    // don't run query if no search query
     enabled: searchQuery.length > 0,
   });
 
-  // Gestionnaire de recherche qui met à jour l'URL
+  // search manager that updates the URL
   const handleSearch = useCallback(
     (query: string) => {
       if (query.trim()) {
@@ -90,7 +88,7 @@ const SearchPage = () => {
     [setSearchParams]
   );
 
-  // Gestion du scroll infini
+  // infinite scroll management
   const handleScroll = useCallback(() => {
     const isBottom =
       window.innerHeight + document.documentElement.scrollTop >=
@@ -101,13 +99,13 @@ const SearchPage = () => {
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  // Configuration de l'écouteur de scroll
+  // adding scroll event listener
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  // Combine tous les résultats des différentes pages
+  // all tracks from all pages
   const allTracks =
     data?.pages.reduce<Track[]>((acc, page) => [...acc, ...page.data], []) ||
     [];

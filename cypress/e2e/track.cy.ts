@@ -1,6 +1,8 @@
-describe("Page de détails de la chanson", () => {
+/// <reference types="cypress" />
+// Track Page Tests
+describe("Song details page", () => {
   beforeEach(() => {
-    // Interception correcte de la requête GraphQL
+    // intercept GraphQL query with exact expected structure
     cy.intercept("POST", "/graphql", (req) => {
       if (req.body.query.includes("GetTrackDetails")) {
         req.reply({
@@ -25,26 +27,27 @@ describe("Page de détails de la chanson", () => {
       }
     }).as("getTrackDetails");
 
-    // Visite de la page avec un ID spécifique
+    // visiting the page with a specific ID
     cy.visit("/track/717273842");
+
+    // wait for GraphQL API response
     cy.wait("@getTrackDetails");
   });
 
-  it("devrait afficher correctement les détails de la chanson", () => {
-    // Ajout de data-testid pour une sélection plus robuste
+  it("should display song details correctly", () => {
     cy.get('[data-testid="track-title"]').should(
       "contain",
       "Titre de la chanson"
     );
 
-    // Vérification du format de la durée (240 secondes = 4:00)
+    // Checking the duration format (240 seconds = 4:00)
     cy.get('[data-testid="track-duration"]').should("contain", "4:00");
 
-    // Vérification de l'icône explicit
+    // checking the explicit icon
     cy.get('[data-testid="explicit-icon"]').should("exist");
   });
 
-  it("devrait afficher correctement les informations de l'album", () => {
+  it("should display album information correctly", () => {
     cy.get('[data-testid="album-title"]').should("contain", "Titre de l'album");
 
     cy.get('[data-testid="album-cover"]')
@@ -52,8 +55,8 @@ describe("Page de détails de la chanson", () => {
       .should("have.attr", "alt", "Titre de l'album");
   });
 
-  it("devrait afficher correctement les informations de l'artiste", () => {
-    // Intercepter la requête GraphQL avec les données de trackDetails.json
+  it("should display artist information correctly", () => {
+    // intercept GraphQL query with data from trackDetails.json
     cy.intercept("POST", "/graphql", (req) => {
       if (req.body.query.includes("GetTrackDetails")) {
         req.reply({
@@ -81,23 +84,23 @@ describe("Page de détails de la chanson", () => {
       }
     }).as("getTrackDetailsDelayed");
 
-    // Visiter la page avec l'ID correspondant
+    // visit the page with the matching ID
     cy.visit("/track/123");
 
-    // Attendre que la requête soit complétée
+    // wait for GraphQL API response
     cy.wait("@getTrackDetailsDelayed");
 
-    // Vérifier les informations de l'artiste dans la section artist-info
+    // check artist information in the artist-info section
     cy.get(".artist-info").within(() => {
-      // Vérifier l'image de profil de l'artiste
+      // check artist profile picture
       cy.get("img")
         .should("have.attr", "src", "https://example.com/artist.jpg")
         .should("have.attr", "alt", "Nom de l'artiste");
 
-      // Vérifier le nom de l'artiste
+      // check artist name
       cy.get("h2").should("contain", "Nom de l'artiste");
 
-      // Vérifier la biographie
+      // check Biography
       cy.get(".artist-biography").within(() => {
         cy.get("h3").should("contain", "Biography");
         cy.get("p").should(
@@ -108,8 +111,8 @@ describe("Page de détails de la chanson", () => {
     });
   });
 
-  it("devrait gérer la navigation", () => {
-    // On simule d'abord une page précédente
+  it("should handle navigation", () => {
+    // first simulate a previous page
     cy.visit("/search");
     cy.visit("/track/717273842");
     cy.wait("@getTrackDetails");
@@ -118,8 +121,8 @@ describe("Page de détails de la chanson", () => {
     cy.url().should("include", "/search");
   });
 
-  it("devrait gérer les erreurs de chargement", () => {
-    // Simulation d'une erreur GraphQL
+  it("should handle loading errors", () => {
+    // simulating a GraphQL error
     cy.intercept("POST", "/graphql", (req) => {
       if (req.body.query.includes("GetTrackDetails")) {
         req.reply({
@@ -137,17 +140,16 @@ describe("Page de détails de la chanson", () => {
     cy.get('[data-testid="error-message"]').should("contain", "Erreur");
   });
 
-  it("devrait afficher le skeleton loader pendant le chargement", () => {
-    // Simuler la réponse GraphQL avec une structure qui correspond exactement à votre API
+  it("should show skeleton loader while loading", () => {
+    // simulate the GraphQL response with a structure that matches your API exactly
     cy.intercept("POST", "/graphql", (req) => {
       if (req.body.query.includes("GetTrackDetails")) {
-        // Important : La réponse doit avoir exactement cette structure pour GraphQL
         req.reply({
           statusCode: 200,
           body: {
             data: {
               getTrackDetails: {
-                id: "717273842", // Notez que l'ID est une string comme dans vos params
+                id: "717273842",
                 title: "Titre de la chanson",
                 duration: 240,
                 explicit: true,
@@ -170,24 +172,23 @@ describe("Page de détails de la chanson", () => {
       }
     }).as("getTrackDetailsDelayed");
 
-    // Visiter la page avec le même ID que dans la réponse mockée
+    // visit the page with the same ID as in the mocked response
     cy.visit("/track/717273842");
 
-    // D'abord, vérifier que le skeleton est affiché
+    // check that the skeleton is displayed
     cy.get('[data-testid="track-skeleton"]').should("exist");
 
-    // Attendre que la requête GraphQL soit complétée
+    // wait for GraphQL query to complete
     cy.wait("@getTrackDetailsDelayed")
       .its("response.body.data.getTrackDetails")
       .should("exist");
 
-    // Attendre que le contenu soit chargé en vérifiant un élément qui n'existe que dans le contenu chargé
+    // wait for content to load by checking for an element that only exists in the loaded content
     cy.get('[data-testid="track-title"]', { timeout: 10000 })
       .should("exist")
       .and("contain", "Titre de la chanson")
       .then(() => {
-        // Une fois que nous avons confirmé que le contenu est chargé,
-        // nous pouvons vérifier que le skeleton a disparu
+        // UOnce we have confirmed that the content is loaded, we can verify that the skeleton is gone
         cy.get('[data-testid="track-skeleton"]').should("not.exist");
       });
   });
