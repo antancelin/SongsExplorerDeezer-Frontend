@@ -11,7 +11,7 @@
     <a href="https://github.com/antancelin/SongsExplorerDeezer-Frontend"><strong>➡️ Explore the docs</strong></a>
     <br />
     <br />
-    <a href="https://github.com/antancelin/SongsExplorerDeezer-Frontend">View Demo</a>
+    <a href="https://deezer-explorer.vercel.app/">View Demo</a>
     ·
     <a href="https://github.com/antancelin/SongsExplorerDeezer-Frontend/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
@@ -46,7 +46,7 @@ Make a full-stack web app for a search engine using Deezer API and Discogs API. 
 
 ## Website Link
 
-### [DEEZER EXPLORER](https://deezerexplorer-antancelin.netlify.app/)
+### [DEEZER EXPLORER](https://deezer-explorer.vercel.app/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
